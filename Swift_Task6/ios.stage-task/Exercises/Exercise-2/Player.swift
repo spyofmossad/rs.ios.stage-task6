@@ -15,10 +15,11 @@ final class Player: PlayerBaseCompatible {
     var hand: [Card]?
 
     func checkIfCanTossWhenAttacking(card: Card) -> Bool {
-        false
+        return hand?.contains(where: { $0.value == card.value }) ?? false
     }
 
     func checkIfCanTossWhenTossing(table: [Card: Card]) -> Bool {
-        false
+       return table.keys.map { checkIfCanTossWhenAttacking(card: $0) }.contains(true) ||
+            table.values.map { checkIfCanTossWhenAttacking(card: $0) }.contains(true)
     }
 }

@@ -3,7 +3,7 @@ import Foundation
 protocol CardBaseCompatible: Hashable, Codable {
     var suit: Suit {get}
     var value: Value {get}
-    var isTrump: Bool {get}
+    var isTrump: Bool {get set}
 
     func hash(into hasher: inout Hasher)
 }
@@ -15,7 +15,7 @@ enum Suit: Int, CaseIterable, Codable {
     case diamonds
 }
 
-enum Value: Int, Codable {
+enum Value: Int, CaseIterable, Codable {
     case six
     case seven
     case eight
@@ -37,13 +37,21 @@ struct Card: CardBaseCompatible {
     }
 
     static func == (lhs: Self, rhs: Self) -> Bool {
-        return false
+        return lhs.suit == rhs.suit && lhs.value == rhs.value
     }
 }
 
 extension Card {
 
     func checkIfCanBeat(card: Card) -> Bool {
+        if card.suit == self.suit && card.value.rawValue < self.value.rawValue {
+            return true
+        }
+        
+        if self.isTrump && !card.isTrump {
+            return true
+        }
+        
         return false
     }
 
